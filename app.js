@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const randCode = require(__dirname + "/create_code.js");
+const { check, validationResult } = require("express-validator");
 
 const app = express();
 app.use(express.static(__dirname + "public"));
@@ -77,8 +78,9 @@ app.get("/survey/:surveyCode", function (req, res) {
       if (foundSurvey) {
         res.render("Survey_screen", {
           title: foundSurvey.title,
-          question: foundSurvey.question,
+          errors: ["You must fill in all the answer field"],
           requestedCode: requestedCode,
+          question: foundSurvey.question,
         });
       } else {
         res.redirect("/?error=Wrong+Code");
@@ -88,66 +90,77 @@ app.get("/survey/:surveyCode", function (req, res) {
 });
 
 // app.post("/survey/:surveyCode", function (req, res) {
-//   const requestedCode = req.params.surveyCode;
-
-//   Survey.findOne(
-//     {
-//       code: requestedCode,
-//     },
-//     function (err, foundSurvey) {
-//       const newAnswer = new Answer({
-//         answer: req.body.postAnswer,
-//         code: requestedCode,
-//         feedback: req.body.feedback,
-//       });
-//       newAnswer.save(function (err) {
-//         if (!err) {
-//           res.redirect("/");
-//         } else {
-//           console.log(err);
+//     const requestedCode = req.params.surveyCode;
+//     Survey.findOne({ code: requestedCode }, (err, foundSurvey) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         let error = "";
+//         for(let i = 0; i < foundSurvey.question.length; i++) {
+//           if(!req.body.postAnswer[i]) {
+//             error = "You must fill in all the answer field";
+//             break;
+//           }
 //         }
-//       });
-//     }
-//   );
-// });
+//         if(error) {
+//           res.render("Survey_screen_err", {
+//             title: foundSurvey.title,
+//             error: error,
+//             requestedCode: requestedCode,
+//             question: foundSurvey.question,
+//           });
+//         } else {
+//           const newAnswer = new Answer({
+//             answer: req.body.postAnswer,
+//             code: requestedCode,
+//             feedback: req.body.feedback,
+//           });
+//           newAnswer.save(function (err) {
+//             if (!err) {
+//               res.redirect("/");
+//             } else {
+//               console.log(err);
+//             }
+//           });
+//         }
+//       }
+//     });
+//   });
 
 app.post("/survey/:surveyCode", function (req, res) {
-    const requestedCode = req.params.surveyCode;
+  const requestedCode = req.params.surveyCode;
+  let errors = [];
+  if (!req.body.postAnswer) {
+    // postAnswer field is empty, display error message
     Survey.findOne({ code: requestedCode }, (err, foundSurvey) => {
       if (err) {
         console.log(err);
       } else {
-        let error = "";
-        for(let i = 0; i < foundSurvey.question.length; i++) {
-          if(!req.body.postAnswer[i]) {
-            error = "You must fill in all the answer field";
-            break;
-          }
-        }
-        if(error) {
-          res.render("Survey_screen_err", {
-            title: foundSurvey.title,
-            error: error,
-            requestedCode: requestedCode,
-            question: foundSurvey.question,
-          });
-        } else {
-          const newAnswer = new Answer({
-            answer: req.body.postAnswer,
-            code: requestedCode,
-            feedback: req.body.feedback,
-          });
-          newAnswer.save(function (err) {
-            if (!err) {
-              res.redirect("/");
-            } else {
-              console.log(err);
-            }
-          });
-        }
+        res.render("Survey_screen_err", {
+          title: foundSurvey.title,
+          error: "You must fill in the answer field",
+          requestedCode: requestedCode,
+          question: foundSurvey.question,
+        });
       }
     });
-  });
+  } else {
+    Survey.findOne({ code: requestedCode }, (err, foundSurvey) => {
+      const newAnswer = new Answer({
+        answer: req.body.postAnswer,
+        code: requestedCode,
+        feedback: req.body.feedback,
+      });
+      newAnswer.save(function (err) {
+        if (!err) {
+          res.redirect("/");
+        } else {
+          console.log(err);
+        }
+      });
+    });
+  }
+});
 
 app.get("/register", function (req, res) {
   res.render("SignUp_Screen");
