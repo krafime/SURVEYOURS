@@ -1,0 +1,99 @@
+body {
+    background-color: #F0C38F;
+    font-family: 'Mulish', sans-serif;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+.navbar-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+.surveyours4_image {
+    width: 40px;
+    margin-right: 10px;
+}
+
+.offcanvas-body {
+    font-size: 1.5rem;
+}
+
+.profile-image  {
+    width: 50px;
+    margin-left: 10px;
+}
+
+.Overview-img {
+    width: 25px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.Create-img {
+    width: 25px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.setting-img {
+    width: 25px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.logout-img {
+    width: 25px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+/* Setting Section */
+.container-fluid{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile_image {
+    margin-bottom: 80px;
+    width: 200px;
+}
+
+.SignIn-form {
+    width: 700px;
+    height: 630px;
+    padding: 20px;
+    background-color: #C09C72;
+    border-radius: 25px;
+    border: #F0C38F;
+    margin-top: 200px;
+    text-align: center;
+    font-size: 30px;
+}
+
+.profile-text {
+    text-align: left;
+    border-bottom: 2px solid #F0C38F;
+}
+
+.btn-profile{
+    border-radius: 25px;
+    background-color: #FCB341;
+    border: #FCB341;
+    margin-top: 20px;
+    font-size: 2rem;
+    margin-left: 20px;
+    font-size: 25px;
+    padding: 10px;
+}
+
+.btn-profile:hover{
+    background-color: #ffc364;
+}
+
+.profile-logo {
+    width: 40px;
+}
+

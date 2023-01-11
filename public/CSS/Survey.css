@@ -1,0 +1,48 @@
+body {
+  text-align: center;
+  background-image: url(../images/background-image.png);
+  background-size: cover;
+  height: 100%;
+  font-family: "Crimson Pro", serif;
+  font-size: 1.25rem;
+}
+
+.container-fluid {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.survey-form {
+  width: 700px;
+  height: 100%;
+  padding: 20px;
+  background-color: #f0c38f;
+  border-radius: 25px;
+  border: #f0c38f;
+}
+
+.survey-form {
+  text-align: left;
+}
+
+.btn-survey {
+  border-radius: 25px;
+  background-color: #bc8c54;
+  border: #bc8c54;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+.btn-survey:hover {
+  background-color: #dfa562;
+}
+
+.nameErr {
+  font-size: 1.3rem;
+  text-align: middle;
+  color: red;
+  margin: 0;
+  padding-left: 10px;
+}

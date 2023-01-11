@@ -1,0 +1,61 @@
+/* font-family: 'Crimson Pro', serif; */
+
+body {
+    text-align: center;
+    background-image: url(../images/background-image.png);
+    background-size: cover;
+    height: 100%;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.25rem;
+}
+
+.container-fluid{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responden-Screen */
+.surveyour2_image {
+    margin-top: 200px;
+    width: 350px;
+}
+
+.code-form {
+    width: 350px;
+    height: 85px;
+    padding: 10px;
+    padding-left: 20px;
+    background-color: #C09C72;
+    border-radius: 25px;
+    border: #C09C72;
+}
+
+.code-placeholder {
+    text-align: center; 
+    border-radius: 25px;
+}
+
+.btn-code {
+    border-radius: 25px;
+    border: #C09C72;
+    padding-left: 0px;
+    padding-top: 13px;
+}
+
+.btn-code:hover {
+    background-color: #e0b583;
+}
+
+.enter-code_image {
+    width: 40px;
+}
+
+.nameErr {
+    font-size: 1.3rem;
+    text-align: middle;
+    color: red;
+    margin: 0;
+    padding-left: 10px;
+  }

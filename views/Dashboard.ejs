@@ -1,0 +1,121 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro&family=Mulish&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/CSS/Dashboard.css">
+
+
+    <title>Surveyours</title>
+</head>
+
+<body>
+    <!-- NAVBAR SECTION -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <span class="navbar-text">
+                <%= requestedUser %>
+                <img class="profile-image" src="/images/profile.png" alt="">
+            </span>
+            <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <img class="Surveyours4_image" src="/images/Surveyours_4.png" alt="Surveyours_4 img">
+                    <h2 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Surveyours</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/dashboard/<%=requestedUser%>">
+                                <img class="Overview-img" src="/images/overview.png" alt="">Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/create/<%=requestedUser%>">
+                                <img class="Create-img" src="/images/create.png" alt=""> Create
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">
+                                <img class="Logout-img" src="/images/logout.png" alt="">Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SURVEY SECTION -->
+    <div class="container-fluid">
+        <div class="card SurveyList-form">
+            <div class="card-text">
+                <form action="/dashboard/<%= requestedUser %>" method="post">
+                    <div class="row mb-2">
+                        <label for="colFormLabel" class="col-sm-5 col-form-label">
+                            <h1 class="header">Survey List</h1>
+                        </label>
+                        <div class="col-sm-1">
+                            <img class="surveyour4_image" src="/images/Surveyours_4.png" alt="surveyour4 img">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control survey-search form-control-lg" id="InputName"
+                                placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <% surveys.forEach(function(survey) { %>
+                        <label for="colFormLabel" class="col-sm-10 col-form-label">
+                            <div class="row mb-2">
+                                <div class="col-sm-15 d-grid">
+                                    <a class="btn btn-lg btn-survey" href="/surveyResponden/<%= requestedUser %>/<%= survey.code %>" role="button-lg">
+                                        <%= survey.title %></a>
+                                </div>
+                            </div>
+                        </label>
+                        <label for="colFormLabel" class="col-sm-1 col-form-label">
+                            <div class="col-sm-1 d-grid">
+                                <button type="button" class="btn btn-secondary btn-popover" data-bs-container="body"
+                                    data-bs-toggle="popover" data-bs-placement="top" 
+                                    data-bs-content="#<%= survey.code %> ">
+                                    CODE
+                                </button>
+                            </div>
+                        </label>
+                        <label for="colFormLabel" class="col-sm-1 col-form-label">
+                            <div class="col-sm-1 d-grid">
+                                <button name="delete" type="submit" value="<%= survey._id %>" class="btn btn-secondary btn-delete" data-bs-container="body">DEL</button>
+                            </div>
+                        </label>
+                        
+                        <% }); %>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    </script>
+</body>
+
+</html>

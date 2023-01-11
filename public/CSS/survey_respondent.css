@@ -1,0 +1,127 @@
+body {
+  background-color: #f0c38f;
+  font-family: "Mulish", sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.navbar-text {
+  font-family: "Crimson Pro", serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+.surveyours4_image {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.offcanvas-body {
+  font-size: 1.5rem;
+}
+
+.profile-image {
+  width: 50px;
+  margin-left: 10px;
+}
+
+.Overview-img {
+  width: 25px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.Create-img {
+  width: 25px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.setting-img {
+  width: 25px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.logout-img {
+  width: 25px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+/* Respondent List */
+.container-fluid {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  font-size: 5rem;
+}
+
+.RespondentList-form {
+  width: 1000px;
+  height: 400px;
+  padding: 20px;
+  background-color: #f0c38f;
+  border-radius: 25px;
+  border: #f0c38f;
+  font-family: "Crimson Pro", serif;
+}
+
+.Respondent-btn {
+  background-color: #ffff;
+  border: #ffff;
+  font-size: 2rem;
+  text-align: left;
+  border-left: 20px solid #bc8c54;
+  border-bottom: 1px solid #bc8c54;
+}
+
+.Respondent-btn:hover {
+  background-color: #dfa562;
+}
+
+.btn-collapse {
+  margin-top: 30px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: #bc8c54;
+  border: 3px solid #916b41;
+}
+
+.btn-collapse:hover {
+  background-color: #dfa562;
+}
+
+.btn-edit {
+  margin-top: 0px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: #bc8c54;
+  border: 3px solid #916b41;
+}
+
+.btn-edit:hover {
+  background-color: #dfa562;
+}
+
+.edit-form {
+  border: #f0c38f;
+  border-left: 20px solid #bc8c54;
+  text-align: left;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border: 5px solid #bc8c54;
+}
+
+.nameErr {
+  font-size: 1.3rem;
+  text-align: middle;
+  color: red;
+  margin: 0;
+  padding-left: 10px;
+}

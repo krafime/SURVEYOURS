@@ -1,0 +1,74 @@
+/* font-family: 'Crimson Pro', serif; */
+
+body {
+  text-align: center;
+  background-image: url(../images/background-image.png);
+  background-size: cover;
+  height: 100%;
+  font-family: "Crimson Pro", serif;
+  font-size: 1.25rem;
+}
+
+.container-fluid {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SignUp_Screen */
+.surveyour3_image {
+  margin-top: 70px;
+  margin-bottom: 20px;
+  width: 100px;
+}
+
+.SignUp-form {
+  width: 370px;
+  height: 400px;
+  padding: 20px;
+  background-color: #f0c38f;
+  border-radius: 25px;
+  border: #f0c38f;
+}
+
+.SignUp-placeholder {
+  border-radius: 25px;
+  border: #fff;
+}
+
+.btn-SignUp {
+  border-radius: 25px;
+  background-color: #fcb341;
+  border: #fcb341;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+.btn-SignUp:hover {
+  background-color: #ffc364;
+}
+
+.SignUp-SignIn-logo {
+  width: 20px;
+  margin-bottom: 10px;
+}
+
+.showpass-logo {
+  width: 25px;
+}
+
+.btn-show {
+  border-radius: 25px;
+  background-color: #fff;
+  border: none;
+}
+
+/* For JavaScript */
+.nameErr {
+  font-size: 1.3rem;
+  text-align: middle;
+  color: red;
+  margin: 0;
+  padding-left: 10px;
+}

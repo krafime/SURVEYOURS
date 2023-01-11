@@ -1,0 +1,88 @@
+/* font-family: 'Crimson Pro', serif; */
+
+body {
+    text-align: center;
+    background-image: url(../images/background-image.png);
+    background-size: cover;
+    height: 100%;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.25rem;
+}
+
+.container-fluid{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Forgot_Screen */
+.surveyour3_image {
+    margin-top: 70px;
+    margin-bottom: 20px;
+    width: 100px;
+}
+
+.forgot-form {
+    width: 370px;
+    height: 400px;
+    padding: 20px;
+    background-color: #F0C38F;
+    border-radius: 25px;
+    border: #F0C38F;
+}
+
+.forgot-placeholder {
+    border-radius: 25px;
+    border: #fff;
+}
+
+.btn-forgot{
+    border-radius: 25px;
+    background-color: #FCB341;
+    border: #FCB341;
+    margin-top: 20px;
+    font-size: 2rem;
+}
+
+.btn-forgot:hover{
+    background-color: #ffc364;
+}
+
+.btn-otp {
+    border-radius: 25px;
+    background-color: #FCB341;
+    border: none;
+}
+
+.btn-otp:hover {
+    background-color: #ffc364;
+}
+
+.btn-show {
+    border-radius: 25px;
+    background-color: #fff;
+    border: none;
+}
+
+.forgot-logo {
+    width: 20px;
+    padding-top: 0px;
+    margin-bottom: 10px;
+}
+
+.showpass-logo {
+    width: 25px;
+}
+
+.otp-logo {
+    width: 23px;
+}
+
+.nameErr {
+    font-size: 1.3rem;
+    text-align: middle;
+    color: red;
+    margin: 0;
+    padding-left: 10px;
+  }

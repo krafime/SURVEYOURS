@@ -1,0 +1,114 @@
+body {
+  background-color: #f0c38f;
+  font-family: "Mulish", sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.navbar-text {
+  font-family: "Crimson Pro", serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+.surveyours4_image {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.offcanvas-body {
+  font-size: 1.5rem;
+}
+
+.profile-image {
+  width: 50px;
+  margin-left: 10px;
+}
+
+.Overview-img {
+  width: 25px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.Create-img {
+  width: 25px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.setting-img {
+  width: 25px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.logout-img {
+  width: 25px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+/* Create Survey */
+.container-fluid {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-form {
+  width: 700px;
+  height: 400px;
+  padding: 20px;
+  background-color: #f0c38f;
+  border-radius: 25px;
+  border: #f0c38f;
+  text-align: center;
+  font-family: "Crimson Pro", serif;
+}
+
+.input-survey {
+  border: #f0c38f;
+  border-left: 20px solid #bc8c54;
+  text-align: left;
+}
+
+.survey-label {
+  margin-bottom: 15px;
+}
+
+.label {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.input-survey-name {
+  font-size: 1.5rem;
+  text-align: center;
+  border: 5px solid #bc8c54;
+  border-radius: 20px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border: 5px solid #bc8c54;
+}
+
+.btn-create {
+  margin-top: 20px;
+  border-radius: 20px;
+  background-color: #bc8c54;
+  font-size: 2rem;
+}
+
+.btn-create:hover {
+  background-color: #dfa562;
+}
+
+.nameErr {
+  font-size: 1.3rem;
+  text-align: middle;
+  color: red;
+  margin: 0;
+  padding-left: 10px;
+}

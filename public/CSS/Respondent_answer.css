@@ -1,0 +1,107 @@
+body {
+    background-color: #F0C38F;
+    font-family: 'Mulish', sans-serif;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+.navbar-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+.surveyours4_image {
+    width: 40px;
+    margin-right: 10px;
+}
+
+.offcanvas-body {
+    font-size: 1.5rem;
+}
+
+.profile-image  {
+    width: 50px;
+    margin-left: 10px;
+}
+
+.Overview-img {
+    width: 25px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.Create-img {
+    width: 25px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.setting-img {
+    width: 25px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.logout-img {
+    width: 25px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+/* Respondent List */
+.container-fluid{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header {
+    font-size: 4rem;
+}
+
+.AnswerList-form {
+    width: 1000px;
+    height: 400px;
+    padding: 20px;
+    background-color: #F0C38F;
+    border-radius: 25px;
+    border: #F0C38F;
+    font-family: 'Crimson Pro', serif;
+}
+
+.Answer-btn {
+    background-color: #ffff;
+    border: #ffff;
+    font-size: 2rem;
+    text-align: left;
+    border-left: 20px solid #BC8C54;
+    border-bottom: 1px solid #BC8C54;
+}
+
+.list-group{
+    margin-left: 5px;
+}
+
+.feedback{
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-delete{
+    margin-top: 15px;
+    margin-left: 65px;
+    font-size: 20px;
+    border-radius: 10px;
+    background-color: #916b41;
+    border: 3px solid #BC8C54;
+}
+
+.nameErr {
+    font-size: 1.3rem;
+    text-align: middle;
+    color: red;
+    margin: 0;
+    padding-left: 10px;
+  }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
+        </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/CSS/Change.css ">
+
+    <title>Surveyours</title>
+</head>
+
+<body>
+    <img class="surveyour3_image" src="/images/Surveyours_3.png" alt="surveyour3 img">
+    <div class="container-fluid">
+        <div class="card forgot-form">
+            <div class="card-text">
+                <form id="Change" action="/change" method="POST">
+                    <div class="row mb-3">
+                        <label for="colFormLabel" class="col-sm-1 col-form-label">
+                            <img class="forgot-logo" src="/images/email-logo.png" alt="email-logo img">
+                        </label>
+                        <div class="col-sm-11">
+                            <input type="email" class="form-control forgot-placeholder form-control-lg" id="InputEmail1"
+                                aria-describedby="emailHelp" placeholder="E-mail" name="email">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="colFormLabel" class="col-sm-1 col-form-label">
+                            <img class="forgot-logo" src="/images/password-logo.png" alt="otp-logo img">
+                        </label>
+                        <div class="col-sm-11">
+                            <div class=" input-group">
+                                <input type="password" class="form-control forgot-placeholder form-control-lg"
+                                    id="InputName" placeholder="Password" name="password">
+                                <button type="submit" class="btn btn-sm btn-outline-light btn-show">
+                                    <img class="showpass-logo" src="/images/eye.png" alt="showpass img">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="colFormLabel" class="col-sm-1 col-form-label">
+                            <img class="forgot-logo" src="/images/password-logo.png" alt="password-logo img">
+                        </label>
+                        <div class="col-sm-11">
+                            <div class="input-group">
+                                <input type="password" class="form-control forgot-placeholder form-control-lg"
+                                    id="InputPassword1" placeholder="New Password" name="newPassword">
+                                <button type="submit" class="btn btn-sm btn-outline-light btn-show">
+                                    <img class="showpass-logo" src="/images/eye.png" alt="showpass img">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nameErr">
+                        <p><%= error %></p>
+                    </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-lg btn-forgot" role="button-lg">Reset</button>
+                            </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
