@@ -125,9 +125,6 @@ const Answer = new mongoose.model("Answer", respondentSchema);
 
 ////////////////////////// API /////////////////////////////////////////////////
 
-// app.get("/", function (req, res) {
-//   res.render("Respondent_Screen");
-// });
 app.get("/", function (req, res) {
   if (req.query.error) {
     res.render("Respondent_Screen_err", { error: req.query.error });
@@ -163,44 +160,6 @@ app.get("/survey/:surveyCode", function (req, res) {
     }
   });
 });
-
-// app.post("/survey/:surveyCode", function (req, res) {
-//     const requestedCode = req.params.surveyCode;
-//     Survey.findOne({ code: requestedCode }, (err, foundSurvey) => {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         let error = "";
-//         for(let i = 0; i < foundSurvey.question.length; i++) {
-//           if(!req.body.postAnswer[i]) {
-//             error = "You must fill in all the answer field";
-//             break;
-//           }
-//         }
-//         if(error) {
-//           res.render("Survey_screen_err", {
-//             title: foundSurvey.title,
-//             error: error,
-//             requestedCode: requestedCode,
-//             question: foundSurvey.question,
-//           });
-//         } else {
-//           const newAnswer = new Answer({
-//             answer: req.body.postAnswer,
-//             code: requestedCode,
-//             feedback: req.body.feedback,
-//           });
-//           newAnswer.save(function (err) {
-//             if (!err) {
-//               res.redirect("/");
-//             } else {
-//               console.log(err);
-//             }
-//           });
-//         }
-//       }
-//     });
-//   });
 
 app.post("/survey/:surveyCode", function (req, res) {
   const requestedCode = req.params.surveyCode;
