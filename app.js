@@ -5,8 +5,8 @@ const _ = require("lodash");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const randCode = require(__dirname + "/create_code.js");
 const { check, validationResult } = require("express-validator");
+const swal = require("sweetalert2");
 
 const app = express();
 app.use(express.static(__dirname + "public"));
@@ -19,6 +19,82 @@ app.use(
   })
 );
 app.use(express.static("public"));
+
+///////////////////// CLASS ////////////////////////////
+
+class SignIn {
+  constructor(username, password) {
+    this.username = username;
+    this.password = password;
+  }
+
+  checkCredentials() {
+    let isValid = true;
+    if (this.username === "") {
+      $(".nameErr").html("Enter Username");
+      isValid = false;
+    } else {
+      $(".nameErr").html("");
+    }
+
+    if (this.password === "") {
+      $(".passErr").html("Enter Password");
+      isValid = false;
+    } else {
+      $(".passErr").html("");
+    }
+
+    return isValid;
+  }
+
+  async validate() {
+    try {
+      this.username = $("#InputName").val();
+      this.password = $("#InputPassword1").val();
+
+      if (this.checkCredentials()) {
+        // check if the credentials are valid
+        const response = await fetch("/login", {
+          method: "POST",
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password,
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json();
+        if (data.status === "success") {
+          // redirect user to dashboard
+          window.location.href = "Dashboard";
+        } else {
+          document.getElementById("error-message").innerHTML = "Wrong password";
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+class RandomStringGenerator {
+  constructor(length) {
+    this.length = length;
+  }
+  generate() {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < this.length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+}
+
+let generator = new RandomStringGenerator(4);
+let randomString = generator.generate();
 
 ////////////////// DATABASE //////////////////////////////////////////////////
 mongoose.connect("mongodb://127.0.0.1:27017/surveyoursDB", {
@@ -136,7 +212,7 @@ app.post("/survey/:surveyCode", function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.render("Survey_screen_err", {
+        res.render("Survey_screen", {
           title: foundSurvey.title,
           error: "You must fill in the answer field",
           requestedCode: requestedCode,
@@ -260,48 +336,6 @@ app.get("/change", function (req, res) {
   res.render("Change_screen");
 });
 
-// app.post("/change", function (req, res) {
-//     const email = req.body.email;
-//     const currentPassword = req.body.password;
-//     const newPassword = req.body.newPassword;
-
-//     User.findOne({ email: email }, function (err, foundUser) {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         if (foundUser) {
-//           // Compare current password with user's hashed password
-//           bcrypt.compare(currentPassword, foundUser.password, function (err, result) {
-//             if (result === true) {
-//               // Hash new password
-//               bcrypt.hash(newPassword, 10, function (err, hashedNewPassword) {
-//                 if (err) {
-//                   console.log(err);
-//                 } else {
-//                   // Update user's password in the database
-//                   User.updateOne({ email: email }, { password: hashedNewPassword }, function (err) {
-//                     if (err) {
-//                       console.log(err);
-//                     } else {
-//                       // password change successfull
-//                       res.redirect("/");
-//                     }
-//                   });
-//                 }
-//               });
-//             } else {
-//               // passwords do not match, display error message
-//               res.render("Change_Screen_err", { error: "Wrong password" });
-//             }
-//           });
-//         } else {
-//           // user not found, display error message
-//           res.render("Change_Screen_err", { error: "Email not found" });
-//         }
-//       }
-//     });
-//   });
-
 app.post("/change", function (req, res) {
   const email = req.body.email;
   const password = req.body.password;
@@ -354,31 +388,44 @@ app.post("/change", function (req, res) {
 
 app.get("/dashboard/:userName", function (req, res) {
   const requestedUser = req.params.userName;
-
-  Survey.find(
-    {
-      user: requestedUser,
-    },
-    function (err, foundSurveys) {
-      res.render("Dashboard", {
-        surveys: foundSurveys,
-        requestedUser: requestedUser,
-      });
-    }
-  );
-});
-
-app.post("/dashboard/:userName", function (req, res) {
-  const requestedUser = req.params.userName;
-  const deleteID = req.body.delete;
-
-  Survey.findByIdAndRemove(deleteID, function (err) {
+  Survey.find({ author: requestedUser }, function (err, foundSurveys) {
     if (!err) {
-      console.log("Succesfully delete an item");
-      res.redirect("/dashboard/" + requestedUser);
+      res.render("Dashboard", {
+        requestedUser: requestedUser,
+        surveys: foundSurveys,
+      });
+    } else {
+      res.status(500).send("Error retrieving surveys");
     }
   });
 });
+
+app.post("/dashboard/:userName", function(req, res) {
+  const requestedUser = req.params.userName;
+  const deleteID = req.body.delete;
+
+  Survey.findByIdAndRemove(deleteID, function(err, survey) {
+    if (!err) {
+      Survey.find({ user: requestedUser }, function(err, updatedSurveys) {
+        if (!err) {
+          console.log("Succesfully delete an item");
+          setTimeout(() => {
+            res.render("Dashboard", {
+            requestedUser: requestedUser,
+            surveys: updatedSurveys,
+          });
+        }, 3000);
+        } else {
+          console.log(err);
+        }
+      });
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+
 
 app.get("/surveyResponden/:userName/:surveyCode", function (req, res) {
   const requestedCode = req.params.surveyCode;
@@ -470,38 +517,20 @@ app.get("/create/:userName", function (req, res) {
   });
 });
 
-// app.post("/create/:userName", function (req, res) {
-//   const requestedUser = req.params.userName;
-//   const newSurvey = new Survey({
-//     title: req.body.postTitle,
-//     question: req.body.postQuestion,
-//     code: randCode.randNum(4),
-//     user: requestedUser,
-//   });
-
-//   newSurvey.save(function (err) {
-//     if (!err) {
-//       res.redirect("/dashboard/" + requestedUser);
-//     } else {
-//       console.log(err);
-//     }
-//   });
-// });
-
 app.post("/create/:userName", function (req, res) {
   const requestedUser = req.params.userName;
 
   if (!req.body.postTitle || !req.body.postQuestion) {
     // title and question fields not filled, display error message
-    res.render("create_err", {
-      error: "You need to fill survey name and question first",
+    res.render("Create_screen", {
+      error: "You must fill in all the question field",
       requestedUser: requestedUser,
     });
   } else {
     const newSurvey = new Survey({
       title: req.body.postTitle,
       question: req.body.postQuestion,
-      code: randCode.randNum(4),
+      code: randomString,
       user: requestedUser,
     });
 

@@ -7,7 +7,11 @@
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
-    </script>
+        </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.3.5/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.3.5/dist/sweetalert2.min.js"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +33,7 @@
             </button>
             <span class="navbar-text">
                 <%= requestedUser %>
-                <img class="profile-image" src="/images/profile.png" alt="">
+                    <img class="profile-image" src="/images/profile.png" alt="">
             </span>
             <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
                 aria-labelledby="offcanvasDarkNavbarLabel">
@@ -80,33 +84,43 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <% surveys.forEach(function(survey) { %>
-                        <label for="colFormLabel" class="col-sm-10 col-form-label">
-                            <div class="row mb-2">
-                                <div class="col-sm-15 d-grid">
-                                    <a class="btn btn-lg btn-survey" href="/surveyResponden/<%= requestedUser %>/<%= survey.code %>" role="button-lg">
-                                        <%= survey.title %></a>
-                                </div>
-                            </div>
-                        </label>
-                        <label for="colFormLabel" class="col-sm-1 col-form-label">
-                            <div class="col-sm-1 d-grid">
-                                <button type="button" class="btn btn-secondary btn-popover" data-bs-container="body"
-                                    data-bs-toggle="popover" data-bs-placement="top" 
-                                    data-bs-content="#<%= survey.code %> ">
-                                    CODE
-                                </button>
-                            </div>
-                        </label>
-                        <label for="colFormLabel" class="col-sm-1 col-form-label">
-                            <div class="col-sm-1 d-grid">
-                                <button name="delete" type="submit" value="<%= survey._id %>" class="btn btn-secondary btn-delete" data-bs-container="body">DEL</button>
-                            </div>
-                        </label>
-                        
-                        <% }); %>
-                    </div>
+                        <% if (surveys && typeof surveys.forEach==='function' ) { %>
+                            <% surveys.forEach(function(survey) { %>
+                                <label for="colFormLabel" class="col-sm-10 col-form-label">
+                                    <div class="row mb-2">
+                                        <div class="col-sm-15 d-grid">
+                                            <a class="btn btn-lg btn-survey"
+                                                href="/surveyResponden/<%= requestedUser %>/<%= survey.code %>"
+                                                role="button-lg">
+                                                <%= survey.title %>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label for="colFormLabel" class="col-sm-1 col-form-label">
+                                    <div class="col-sm-1 d-grid">
+                                        <button type="button" class="btn btn-secondary btn-popover"
+                                            data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top"
+                                            data-bs-content="#<%= survey.code %> ">
+                                            CODE
+                                        </button>
+                                    </div>
 
+                                </label>
+                                <label for="colFormLabel" class="col-sm-1 col-form-label">
+                                    <div class="col-sm-1 d-grid">
+                                        <button name="delete" type="submit" value="<%= survey._id %>"
+                                            class="btn btn-secondary btn-delete" data-bs-container="body"
+                                            id="delete-btn">DEL</button>
+                                    </div>
+                                </label>
+
+                                <% }); %>
+                                    <% } else { %>
+                                        <p>No surveys found.</p>
+                                        <% } %>
+
+                    </div>
                 </form>
             </div>
         </div>
@@ -115,6 +129,26 @@
     <script>
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+        document.getElementById("delete-btn").addEventListener("click", function () {
+            swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    // code to delete survey here
+                    swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            });
+        });
     </script>
 </body>
 

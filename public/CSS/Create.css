@@ -107,8 +107,15 @@ input[type="text"]:focus {
 
 .nameErr {
   font-size: 1.3rem;
-  text-align: middle;
+  text-align: center;
   color: red;
   margin: 0;
   padding-left: 10px;
+}
+
+.create_question {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  /* other styles as needed */
 }
