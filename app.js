@@ -505,10 +505,16 @@ app.post("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
   Answer.findByIdAndRemove(deleteID, function (err) {
     if (!err) {
       console.log("Succesfully delete an item");
-      res.redirect("/surveyResponden/" + requestedUser + "/" + requestedCode);
+      setTimeout(() => {
+        res.redirect("/surveyResponden/" + requestedUser + "/" + requestedCode);
+      }, 3000);
+    } else {
+        console.log(err)
     }
   });
 });
+
+
 
 app.get("/create/:userName", function (req, res) {
   const requestedUser = req.params.userName;
