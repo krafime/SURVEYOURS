@@ -109,11 +109,12 @@
         </div>
     </div>
     <script>document.getElementById("delete-btn").addEventListener("click", function () {
-        swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-        )
+            swal.fire({
+                title: 'Deleted!',
+                text: 'Your file has been deleted.',
+                icon: 'success',
+                showConfirmButton: false,
+            })
         });</script>
 </body>
 

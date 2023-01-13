@@ -399,31 +399,30 @@ app.get("/dashboard/:userName", function (req, res) {
   });
 });
 
-app.post("/dashboard/:userName", function(req, res) {
+app.post("/dashboard/:userName", function (req, res) {
   const requestedUser = req.params.userName;
   const deleteID = req.body.delete;
 
-  Survey.findByIdAndRemove(deleteID, function(err, survey) {
+  Survey.findByIdAndRemove(deleteID, function (err, survey) {
     if (!err) {
-
-       // delete answer to the survey
-       Answer.find({code: survey.code}, function (err) {
+      // delete answer to the survey
+      Answer.find({ code: survey.code }, function (err) {
         if (!err) {
           console.log("Succesfully delete an item");
         } else {
-            console.log(err)
+          console.log(err);
         }
       }).remove();
 
-      Survey.find({ user: requestedUser }, function(err, updatedSurveys) {
+      Survey.find({ user: requestedUser }, function (err, updatedSurveys) {
         if (!err) {
           console.log("Succesfully delete an item");
           setTimeout(() => {
             res.render("Dashboard", {
-            requestedUser: requestedUser,
-            surveys: updatedSurveys,
-          });
-        }, 2200);
+              requestedUser: requestedUser,
+              surveys: updatedSurveys,
+            });
+          }, 2200);
         } else {
           console.log(err);
         }
@@ -431,11 +430,8 @@ app.post("/dashboard/:userName", function(req, res) {
     } else {
       console.log(err);
     }
-
   });
 });
-
-
 
 app.get("/surveyResponden/:userName/:surveyCode", function (req, res) {
   const requestedCode = req.params.surveyCode;
@@ -519,12 +515,10 @@ app.post("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
         res.redirect("/surveyResponden/" + requestedUser + "/" + requestedCode);
       }, 2200);
     } else {
-        console.log(err)
+      console.log(err);
     }
   });
 });
-
-
 
 app.get("/create/:userName", function (req, res) {
   const requestedUser = req.params.userName;
