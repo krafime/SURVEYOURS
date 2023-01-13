@@ -94,7 +94,6 @@ class RandomStringGenerator {
 }
 
 let generator = new RandomStringGenerator(4);
-let randomString = generator.generate();
 
 ////////////////// DATABASE //////////////////////////////////////////////////
 mongoose.connect("mongodb://127.0.0.1:27017/surveyoursDB", {
@@ -533,6 +532,7 @@ app.post("/create/:userName", function (req, res) {
       requestedUser: requestedUser,
     });
   } else {
+    let randomString = generator.generate();
     const newSurvey = new Survey({
       title: req.body.postTitle,
       question: req.body.postQuestion,
