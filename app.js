@@ -414,7 +414,7 @@ app.post("/dashboard/:userName", function(req, res) {
             console.log(err)
         }
       }).remove();
-      
+
       Survey.find({ user: requestedUser }, function(err, updatedSurveys) {
         if (!err) {
           console.log("Succesfully delete an item");
@@ -423,7 +423,7 @@ app.post("/dashboard/:userName", function(req, res) {
             requestedUser: requestedUser,
             surveys: updatedSurveys,
           });
-        }, 3000);
+        }, 2200);
         } else {
           console.log(err);
         }
@@ -517,7 +517,7 @@ app.post("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
       console.log("Succesfully delete an item");
       setTimeout(() => {
         res.redirect("/surveyResponden/" + requestedUser + "/" + requestedCode);
-      }, 3000);
+      }, 2200);
     } else {
         console.log(err)
     }
