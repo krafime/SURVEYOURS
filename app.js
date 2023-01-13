@@ -405,6 +405,16 @@ app.post("/dashboard/:userName", function(req, res) {
 
   Survey.findByIdAndRemove(deleteID, function(err, survey) {
     if (!err) {
+
+       // delete answer to the survey
+       Answer.find({code: survey.code}, function (err) {
+        if (!err) {
+          console.log("Succesfully delete an item");
+        } else {
+            console.log(err)
+        }
+      }).remove();
+      
       Survey.find({ user: requestedUser }, function(err, updatedSurveys) {
         if (!err) {
           console.log("Succesfully delete an item");
@@ -421,6 +431,7 @@ app.post("/dashboard/:userName", function(req, res) {
     } else {
       console.log(err);
     }
+
   });
 });
 
