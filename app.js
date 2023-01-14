@@ -10,13 +10,13 @@ const swal = require("sweetalert2");
 const { JSDOM } = require("jsdom");
 const dom = new JSDOM();
 global.document = dom.window.document;
-const SignIn = require('./JS/SignIn');
-const RandomStringGenerator = require('./JS/RandomStringGenerator');
-let generator = new RandomStringGenerator(4);
-const ChangePassword = require('./JS/ChangePassword');
-const SignUp = require('./JS/SignUp');
-
-
+const SignIn = require("./JS/SignIn");
+const ChangePassword = require("./JS/ChangePassword");
+const SignUp = require("./JS/SignUp");
+const CreateSurvey = require("./JS/CreateSurvey");
+const TakeSurvey = require("./JS/TakeSurvey");
+const Dashboard = require("./JS/Dashboard");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(express.static(__dirname + "public"));
@@ -29,6 +29,8 @@ app.use(
   })
 );
 app.use(express.static("public"));
+
+app.use(cookieParser());
 
 ////////////////// DATABASE //////////////////////////////////////////////////
 mongoose.connect("mongodb://127.0.0.1:27017/surveyoursDB", {
@@ -96,43 +98,14 @@ app.get("/survey/:surveyCode", function (req, res) {
   });
 });
 
-app.post("/survey/:surveyCode", function (req, res) {
+app.post("/survey/:surveyCode", async function (req, res) {
   const requestedCode = req.params.surveyCode;
-  let errors = [];
-  if (!req.body.postAnswer) {
-    // postAnswer field is empty, display error message
-    Survey.findOne({ code: requestedCode }, (err, foundSurvey) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.render("Survey_screen", {
-          title: foundSurvey.title,
-          error: "You must fill in the answer field",
-          requestedCode: requestedCode,
-          question: foundSurvey.question,
-        });
-      }
-    });
-  } else {
-    Survey.findOne({ code: requestedCode }, (err, foundSurvey) => {
-      const newAnswer = new Answer({
-        answer: req.body.postAnswer,
-        code: requestedCode,
-        feedback: req.body.feedback,
-      });
-      newAnswer.save(function (err) {
-        if (!err) {
-          res.redirect("/");
-        } else {
-          console.log(err);
-        }
-      });
-    });
+  const submitAnswer = new TakeSurvey(requestedCode);
+  try {
+    submitAnswer.submitAnswer(req, res, Survey, Answer);
+  } catch (error) {
+    console.log(error);
   }
-});
-
-app.get("/register", function (req, res) {
-  res.render("SignUp_Screen");
 });
 
 app.get("/register", function (req, res) {
@@ -145,7 +118,7 @@ app.post("/register", async function (req, res) {
   const password = req.body.password;
   const signup = new SignUp(username, email, password);
   try {
-    signup.registerUser(req,res,User);
+    signup.registerUser(req, res, User);
   } catch (error) {
     console.log(error);
   }
@@ -195,63 +168,30 @@ app.get("/change", function (req, res) {
   res.render("Change_screen");
 });
 
-app.post('/change', async (req, res) => {
-  const changePass = new ChangePassword(req.body.email, req.body.password, req.body.newPassword);
-  await changePass.changePassword(req,res,User);
-});
-
-app.get("/dashboard/:userName", function (req, res) {
-  const requestedUser = req.params.userName;
-
-  Survey.find(
-    {
-      user: requestedUser,
-    },
-    function (err, foundSurveys) {
-      res.render("Dashboard", {
-        surveys: foundSurveys,
-        requestedUser: requestedUser,
-      });
-    }
+app.post("/change", async (req, res) => {
+  const changePass = new ChangePassword(
+    req.body.email,
+    req.body.password,
+    req.body.newPassword
   );
+  await changePass.changePassword(req, res, User);
 });
 
-app.post("/dashboard/:userName", function (req, res) {
-  const requestedUser = req.params.userName;
-  const deleteID = req.body.delete;
+app.get("/dashboard/:userName", (req, res) => {
+  const dashboard = new Dashboard(req);
+  res.cookie("currentUser", req.params.userName);
+  dashboard.getSurveys(req, res, Survey, Answer);
+});
 
-  Survey.findById(deleteID, function (err, survey) {
-    if (!err) {
-      if (survey.user == requestedUser) {
-        survey.remove();
-        // delete answer to the survey
-        Answer.deleteMany({ code: survey.code }, function (err) {
-          if (!err) {
-            console.log("Succesfully delete an item");
-          } else {
-            console.log(err);
-          }
-        });
+app.get("/dashboard", (req, res) => {
+  const currentUser = req.cookies.currentUser;
+  const dashboard = new Dashboard(currentUser);
+  dashboard.getSurveys(req, res, Survey, Answer);
+});
 
-        Survey.find({ user: requestedUser }, function (err, updatedSurveys) {
-          if (!err) {
-            setTimeout(() => {
-              res.render("Dashboard", {
-                requestedUser: requestedUser,
-                surveys: updatedSurveys,
-              });
-            }, 2200);
-          } else {
-            console.log(err);
-          }
-        });
-      } else {
-        console.log("You don't have permission to delete this survey");
-      }
-    } else {
-      console.log(err);
-    }
-  });
+app.post("/dashboard/:userName", (req, res) => {
+  const dashboard = new Dashboard(req);
+  dashboard.deleteSurvey(req, res, Survey, Answer);
 });
 
 app.get("/surveyResponden/:userName/:surveyCode", function (req, res) {
@@ -350,30 +290,15 @@ app.get("/create/:userName", function (req, res) {
 
 app.post("/create/:userName", function (req, res) {
   const requestedUser = req.params.userName;
+  const postTitle = req.body.postTitle;
+  const postQuestion = req.body.postQuestion;
+  const createSurvey = new CreateSurvey(requestedUser, postTitle, postQuestion);
+  createSurvey.createSurvey(req, res, Survey);
+});
 
-  if (!req.body.postTitle || !req.body.postQuestion) {
-    // title and question fields not filled, display error message
-    res.render("Create_screen", {
-      error: "You must fill in all the question field",
-      requestedUser: requestedUser,
-    });
-  } else {
-    let randomString = generator.generate();
-    const newSurvey = new Survey({
-      title: req.body.postTitle,
-      question: req.body.postQuestion,
-      code: randomString,
-      user: requestedUser,
-    });
-
-    newSurvey.save(function (err) {
-      if (!err) {
-        res.redirect("/dashboard/" + requestedUser);
-      } else {
-        console.log(err);
-      }
-    });
-  }
+app.get("/logout", (req, res) => {
+  res.clearCookie("currentUser");
+  res.redirect("/");
 });
 
 app.listen(3000, function () {
