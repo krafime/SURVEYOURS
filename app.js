@@ -7,6 +7,16 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { check, validationResult } = require("express-validator");
 const swal = require("sweetalert2");
+const { JSDOM } = require("jsdom");
+const dom = new JSDOM();
+global.document = dom.window.document;
+const SignIn = require('./JS/SignIn');
+const RandomStringGenerator = require('./JS/RandomStringGenerator');
+let generator = new RandomStringGenerator(4);
+const ChangePassword = require('./JS/ChangePassword');
+const SignUp = require('./JS/SignUp');
+
+
 
 const app = express();
 app.use(express.static(__dirname + "public"));
@@ -19,81 +29,6 @@ app.use(
   })
 );
 app.use(express.static("public"));
-
-///////////////////// CLASS ////////////////////////////
-
-class SignIn {
-  constructor(username, password) {
-    this.username = username;
-    this.password = password;
-  }
-
-  checkCredentials() {
-    let isValid = true;
-    if (this.username === "") {
-      $(".nameErr").html("Enter Username");
-      isValid = false;
-    } else {
-      $(".nameErr").html("");
-    }
-
-    if (this.password === "") {
-      $(".passErr").html("Enter Password");
-      isValid = false;
-    } else {
-      $(".passErr").html("");
-    }
-
-    return isValid;
-  }
-
-  async validate() {
-    try {
-      this.username = $("#InputName").val();
-      this.password = $("#InputPassword1").val();
-
-      if (this.checkCredentials()) {
-        // check if the credentials are valid
-        const response = await fetch("/login", {
-          method: "POST",
-          body: JSON.stringify({
-            username: this.username,
-            password: this.password,
-          }),
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const data = await response.json();
-        if (data.status === "success") {
-          // redirect user to dashboard
-          window.location.href = "Dashboard";
-        } else {
-          document.getElementById("error-message").innerHTML = "Wrong password";
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-}
-
-class RandomStringGenerator {
-  constructor(length) {
-    this.length = length;
-  }
-  generate() {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < this.length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
-}
-
-let generator = new RandomStringGenerator(4);
 
 ////////////////// DATABASE //////////////////////////////////////////////////
 mongoose.connect("mongodb://127.0.0.1:27017/surveyoursDB", {
@@ -200,58 +135,19 @@ app.get("/register", function (req, res) {
   res.render("SignUp_Screen");
 });
 
-app.post("/register", function (req, res) {
+app.get("/register", function (req, res) {
+  res.render("SignUp_Screen");
+});
+
+app.post("/register", async function (req, res) {
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
-
-  if (!/^[a-zA-Z0-9]{8,}$/.test(password)) {
-    // password does not meet requirements, display error message
-    res.render("SignUp_Screen_err", {
-      error: "Password must be at least 8 alphanumeric characters",
-    });
-  } else {
-    User.findOne(
-      {
-        $or: [{ username: username }, { email: email }],
-      },
-      function (err, foundUser) {
-        if (err) {
-          console.log(err);
-        } else {
-          if (foundUser) {
-            // check if the username or email is already in use
-            if (foundUser.username === username) {
-              // username already in use, display error message
-              res.render("SignUp_Screen_err", {
-                error: "Username already in use",
-              });
-            } else {
-              // email already in use, display error message
-              res.render("SignUp_Screen_err", {
-                error: "Email already in use",
-              });
-            }
-          } else {
-            // username and email not in use, create new user
-            bcrypt.hash(password, saltRounds, function (err, hash) {
-              const newUser = new User({
-                username: username,
-                email: email,
-                password: hash,
-              });
-              newUser.save(function (err) {
-                if (!err) {
-                  res.redirect("/login");
-                } else {
-                  console.log(err);
-                }
-              });
-            });
-          }
-        }
-      }
-    );
+  const signup = new SignUp(username, email, password);
+  try {
+    signup.registerUser(req,res,User);
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -260,132 +156,98 @@ app.get("/login", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  User.findOne(
-    {
-      username: username,
-    },
-    function (err, foundUser) {
-      if (err) {
-        console.log(err);
-      } else {
-        if (foundUser) {
-          bcrypt.compare(password, foundUser.password, function (err, result) {
-            if (result === true) {
-              // passwords match, redirect to dashboard
-              res.redirect("/dashboard/" + foundUser.username);
-            } else {
-              // passwords do not match, display error message
-              res.render("SignIn_Screen_err", { error: "Wrong password" });
-            }
-          });
+  const signIn = new SignIn(req.body.username, req.body.password);
+  signIn.validate().then(() => {
+    // check if the credentials are valid
+    User.findOne(
+      {
+        username: signIn.username,
+      },
+      function (err, foundUser) {
+        if (err) {
+          console.log(err);
         } else {
-          // user not found, display error message
-          res.render("SignIn_Screen_err", { error: "User not found" });
+          if (foundUser) {
+            bcrypt.compare(
+              signIn.password,
+              foundUser.password,
+              function (err, result) {
+                if (result === true) {
+                  // passwords match, redirect to dashboard
+                  res.redirect("/dashboard/" + foundUser.username);
+                } else {
+                  // passwords do not match, display error message
+                  res.render("SignIn_Screen_err", { error: "Wrong password" });
+                }
+              }
+            );
+          } else {
+            // user not found, display error message
+            res.render("SignIn_Screen_err", { error: "User not found" });
+          }
         }
       }
-    }
-  );
+    );
+  });
 });
 
 app.get("/change", function (req, res) {
   res.render("Change_screen");
 });
 
-app.post("/change", function (req, res) {
-  const email = req.body.email;
-  const password = req.body.password;
-  const newPassword = req.body.newPassword;
-
-  User.findOne({ email: email }, function (err, foundUser) {
-    if (err) {
-      console.log(err);
-    } else {
-      if (foundUser) {
-        bcrypt.compare(password, foundUser.password, function (err, result) {
-          if (result === true) {
-            //Check if newPassword is valid
-            if (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(newPassword)) {
-              bcrypt.hash(newPassword, 10, function (err, hash) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  User.updateOne(
-                    { email: email },
-                    { $set: { password: hash } },
-                    function (err) {
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        res.redirect("/login");
-                      }
-                    }
-                  );
-                }
-              });
-            } else {
-              // new password not valid
-              res.render("Change_Screen_err", {
-                error: "Password must be at least 8 alphanumeric characters",
-              });
-            }
-          } else {
-            // wrong password
-            res.render("Change_Screen_err", { error: "Wrong Old Password" });
-          }
-        });
-      } else {
-        // email not found
-        res.render("Change_Screen_err", { error: "Email not found" });
-      }
-    }
-  });
+app.post('/change', async (req, res) => {
+  const changePass = new ChangePassword(req.body.email, req.body.password, req.body.newPassword);
+  await changePass.changePassword(req,res,User);
 });
 
 app.get("/dashboard/:userName", function (req, res) {
   const requestedUser = req.params.userName;
-  Survey.find({ author: requestedUser }, function (err, foundSurveys) {
-    if (!err) {
+
+  Survey.find(
+    {
+      user: requestedUser,
+    },
+    function (err, foundSurveys) {
       res.render("Dashboard", {
-        requestedUser: requestedUser,
         surveys: foundSurveys,
+        requestedUser: requestedUser,
       });
-    } else {
-      res.status(500).send("Error retrieving surveys");
     }
-  });
+  );
 });
 
 app.post("/dashboard/:userName", function (req, res) {
   const requestedUser = req.params.userName;
   const deleteID = req.body.delete;
 
-  Survey.findByIdAndRemove(deleteID, function (err, survey) {
+  Survey.findById(deleteID, function (err, survey) {
     if (!err) {
-      // delete answer to the survey
-      Answer.find({ code: survey.code }, function (err) {
-        if (!err) {
-          console.log("Succesfully delete an item");
-        } else {
-          console.log(err);
-        }
-      }).remove();
+      if (survey.user == requestedUser) {
+        survey.remove();
+        // delete answer to the survey
+        Answer.deleteMany({ code: survey.code }, function (err) {
+          if (!err) {
+            console.log("Succesfully delete an item");
+          } else {
+            console.log(err);
+          }
+        });
 
-      Survey.find({ user: requestedUser }, function (err, updatedSurveys) {
-        if (!err) {
-          console.log("Succesfully delete an item");
-          setTimeout(() => {
-            res.render("Dashboard", {
-              requestedUser: requestedUser,
-              surveys: updatedSurveys,
-            });
-          }, 2200);
-        } else {
-          console.log(err);
-        }
-      });
+        Survey.find({ user: requestedUser }, function (err, updatedSurveys) {
+          if (!err) {
+            setTimeout(() => {
+              res.render("Dashboard", {
+                requestedUser: requestedUser,
+                surveys: updatedSurveys,
+              });
+            }, 2200);
+          } else {
+            console.log(err);
+          }
+        });
+      } else {
+        console.log("You don't have permission to delete this survey");
+      }
     } else {
       console.log(err);
     }

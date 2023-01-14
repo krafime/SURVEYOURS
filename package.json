@@ -14,6 +14,8 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
+    "jquery": "^3.6.3",
+    "jsdom": "^21.0.0",
     "lodash": "^4.17.21",
     "mongoose": "^6.8.2",
     "sweetalert": "^2.1.2",
