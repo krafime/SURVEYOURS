@@ -17,6 +17,7 @@ const CreateSurvey = require("./JS/CreateSurvey");
 const TakeSurvey = require("./JS/TakeSurvey");
 const Dashboard = require("./JS/Dashboard");
 const cookieParser = require("cookie-parser");
+const AnswerPage = require("./JS/AnswerPage");
 
 const app = express();
 app.use(express.static(__dirname + "public"));
@@ -237,48 +238,13 @@ app.post("/surveyResponden/:userName/:surveyCode", function (req, res) {
 });
 
 app.get("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
-  const requestedUser = req.params.userName;
-  const requestedID = req.params.respondentID;
-  const requestedCode = req.params.surveyCode;
-  Answer.findOne(
-    {
-      _id: requestedID,
-    },
-    function (err, foundCode) {
-      Survey.findOne(
-        {
-          code: requestedCode,
-        },
-        function (err, foundSurvey) {
-          res.render("Respondent_answer", {
-            questions: foundSurvey.question,
-            answers: foundCode,
-            feedback: foundCode,
-            requestedID: requestedID,
-            requestedCode: requestedCode,
-            requestedUser: requestedUser,
-          });
-        }
-      );
-    }
-  );
+  const answerPage = new AnswerPage(req);
+  answerPage.getAnswer(req, res, Survey, Answer);
 });
 
 app.post("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
-  const requestedUser = req.params.userName;
-  const requestedCode = req.params.surveyCode;
-  const deleteID = req.body.delete;
-
-  Answer.findByIdAndRemove(deleteID, function (err) {
-    if (!err) {
-      console.log("Succesfully delete an item");
-      setTimeout(() => {
-        res.redirect("/surveyResponden/" + requestedUser + "/" + requestedCode);
-      }, 2200);
-    } else {
-      console.log(err);
-    }
-  });
+  const answerPage = new AnswerPage(req);
+  answerPage.deleteAnswer(req, res, Answer);
 });
 
 app.get("/create/:userName", function (req, res) {
