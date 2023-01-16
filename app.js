@@ -10,14 +10,12 @@ const swal = require("sweetalert2");
 const { JSDOM } = require("jsdom");
 const dom = new JSDOM();
 global.document = dom.window.document;
-const SignIn = require("./JS/SignIn");
-const ChangePassword = require("./JS/ChangePassword");
-const SignUp = require("./JS/SignUp");
-const CreateSurvey = require("./JS/CreateSurvey");
 const TakeSurvey = require("./JS/TakeSurvey");
-const Dashboard = require("./JS/Dashboard");
 const cookieParser = require("cookie-parser");
+const { SignUp, SignIn,ChangePassword, CreateSurvey } = require("./JS/classUser");
 const AnswerPage = require("./JS/AnswerPage");
+const Dashboard = require("./JS/Dashboard");
+
 
 const app = express();
 app.use(express.static(__dirname + "public"));
