@@ -11,11 +11,11 @@ const swal = require("sweetalert2");
 const { JSDOM } = require("jsdom");
 const dom = new JSDOM();
 global.document = dom.window.document;
-const TakeSurvey = require("./JS/TakeSurvey");
+const TakeSurvey = require("./JS/Responden");
 const cookieParser = require("cookie-parser");
 const { SignUp, SignIn,ChangePassword, CreateSurvey } = require("./JS/classUser");
-const AnswerPage = require("./JS/AnswerPage");
-const Dashboard = require("./JS/Dashboard");
+const AnswerPage = require("./JS/Hasil_Survey");
+const Dashboard = require("./JS/Survey");
 
 
 const app = express();
