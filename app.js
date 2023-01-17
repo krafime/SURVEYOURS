@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
 const mongoose = require("mongoose");
+mongoose.set('strictQuery', true);
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { check, validationResult } = require("express-validator");
@@ -58,6 +59,7 @@ const respondentSchema = new mongoose.Schema({
 const User = new mongoose.model("User", userSchema);
 const Survey = new mongoose.model("Survey", surveySchema);
 const Answer = new mongoose.model("Answer", respondentSchema);
+
 
 ////////////////////////// API /////////////////////////////////////////////////
 
