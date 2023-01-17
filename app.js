@@ -11,11 +11,11 @@ const swal = require("sweetalert2");
 const { JSDOM } = require("jsdom");
 const dom = new JSDOM();
 global.document = dom.window.document;
-const TakeSurvey = require("./JS/Responden");
+const Responden = require("./JS/Responden");
 const cookieParser = require("cookie-parser");
-const { SignUp, SignIn,ChangePassword, CreateSurvey } = require("./JS/classUser");
-const AnswerPage = require("./JS/Hasil_Survey");
-const Dashboard = require("./JS/Survey");
+const { SignUp, SignIn, ChangePassword, CreateSurvey } = require("./JS/classUser");
+const Hasil_Survey = require("./JS/Hasil_Survey");
+const classSurvey = require("./JS/Survey");
 
 
 const app = express();
@@ -101,7 +101,7 @@ app.get("/survey/:surveyCode", function (req, res) {
 
 app.post("/survey/:surveyCode", async function (req, res) {
   const requestedCode = req.params.surveyCode;
-  const submitAnswer = new TakeSurvey(requestedCode);
+  const submitAnswer = new Responden(requestedCode);
   try {
     submitAnswer.submitAnswer(req, res, Survey, Answer);
   } catch (error) {
@@ -179,19 +179,19 @@ app.post("/change", async (req, res) => {
 });
 
 app.get("/dashboard/:userName", (req, res) => {
-  const dashboard = new Dashboard(req);
+  const dashboard = new classSurvey(req);
   res.cookie("currentUser", req.params.userName);
   dashboard.getSurveys(req, res, Survey, Answer);
 });
 
 app.get("/dashboard", (req, res) => {
   const currentUser = req.cookies.currentUser;
-  const dashboard = new Dashboard(currentUser);
+  const dashboard = new classSurvey(currentUser);
   dashboard.getSurveys(req, res, Survey, Answer);
 });
 
 app.post("/dashboard/:userName", (req, res) => {
-  const dashboard = new Dashboard(req);
+  const dashboard = new classSurvey(req);
   dashboard.deleteSurvey(req, res, Survey, Answer);
 });
 
@@ -238,12 +238,12 @@ app.post("/surveyResponden/:userName/:surveyCode", function (req, res) {
 });
 
 app.get("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
-  const answerPage = new AnswerPage(req);
+  const answerPage = new Hasil_Survey(req);
   answerPage.getAnswer(req, res, Survey, Answer);
 });
 
 app.post("/answer/:userName/:surveyCode/:respondentID", function (req, res) {
-  const answerPage = new AnswerPage(req);
+  const answerPage = new Hasil_Survey(req);
   answerPage.deleteAnswer(req, res, Answer);
 });
 

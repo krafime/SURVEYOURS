@@ -1,4 +1,4 @@
-class AnswerPage {
+class Hasil_Survey {
   constructor(req) {
     this._requestedUser = req.params.userName;
     this._requestedID = req.params.respondentID;
@@ -53,4 +53,4 @@ class AnswerPage {
     });
   }
 }
-module.exports = AnswerPage;
+module.exports = Hasil_Survey;

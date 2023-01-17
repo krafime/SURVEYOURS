@@ -1,4 +1,4 @@
-class TakeSurvey {
+class Responden {
   constructor(surveyCode) {
     this._surveyCode = surveyCode;
   }
@@ -70,4 +70,4 @@ class TakeSurvey {
     }
   }
 }
-module.exports = TakeSurvey;
+module.exports = Responden;

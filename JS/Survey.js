@@ -1,4 +1,4 @@
-class Dashboard {
+class Survey {
     constructor(req) {
     this._requestedUser = req.cookies.currentUser;
     this._surveys = [];
@@ -82,4 +82,4 @@ class Dashboard {
     });
   }
 }
-module.exports = Dashboard;
+module.exports = Survey;
